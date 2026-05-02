@@ -198,3 +198,47 @@ Pros:
 Cons:
 
 - cache invalidation complexity
+
+# Stage 5
+
+## Problems
+
+Sequential sending causes:
+
+- slow delivery
+- timeout risk
+- low scalability
+
+## Better Architecture
+
+Queue + Workers
+
+## New Flow
+
+1. push all students into queue
+2. worker consumes queue
+3. send email
+4. save to DB
+
+## Pseudocode
+
+```javascript
+for (const student of students) {
+    queue.push(student);
+}
+```
+
+Worker:
+
+```javascript
+while(queue.hasItems()) {
+    sendEmail();
+    saveToDB();
+}
+```
+
+## Why this is better
+
+- parallel processing
+- scalable
+- fault tolerant
