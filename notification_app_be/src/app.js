@@ -1,32 +1,43 @@
 require("dotenv").config();
+
+const express = require("express");
 const fetchNotifications = require("./fetchNotifications");
 const sortNotifications = require("./priorityService");
-async function main() {
+
+const app = express();
+
+app.get("/api/notifications", async (req, res) => {
     try {
         const token = process.env.ACCESS_TOKEN;
+
         if (!token) {
-            console.log("Error: ACCESS_TOKEN not found in .env");
-            return;
+            return res.status(500).json({
+                error: "ACCESS_TOKEN missing"
+            });
         }
-        const notifications = await fetchNotifications(token);
+
+        const notifications =
+            await fetchNotifications(token);
+
         const sortedNotifications =
             sortNotifications(notifications);
-        console.log("Sorted Notifications:\n");
-        sortedNotifications.forEach((notification, index) => {
-            console.log(`Notification ${index + 1}`);
-            console.log(`ID: ${notification.ID}`);
-            console.log(`Type: ${notification.Type}`);
-            console.log(`Message: ${notification.Message}`);
-            console.log(`Timestamp: ${notification.Timestamp}`);
-            console.log("-----------------------------");
+
+        res.status(200).json({
+            success: true,
+            total: sortedNotifications.length,
+            notifications: sortedNotifications
         });
+
     } catch (error) {
-        console.log("Error fetching notifications:");
-        if (error.response) {
-            console.log(error.response.data);
-        } else {
-            console.log(error.message);
-        }
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
     }
-}
-main();
+});
+
+app.listen(3000, () => {
+    console.log(
+        "Notification API running on port 3000"
+    );
+});
