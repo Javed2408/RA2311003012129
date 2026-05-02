@@ -128,3 +128,35 @@ As data grows:
 - indexing
 - partitioning
 - caching
+
+# Stage 3
+
+## Problem Analysis
+
+Problems:
+
+- full table scan
+- expensive sort
+
+## Better Index
+
+```sql
+CREATE INDEX idx_notifications
+ON notifications(studentID, isRead, createdAt DESC);
+```
+
+## Why?
+
+This index helps:
+
+- filter studentID
+- filter unread
+- sort efficiently
+
+## Time Complexity
+
+Before:
+O(n log n)
+
+After:
+O(log n)
