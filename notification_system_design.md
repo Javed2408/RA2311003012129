@@ -160,3 +160,41 @@ O(n log n)
 
 After:
 O(log n)
+
+# Stage 4
+
+## Problem
+
+Notifications fetched on every page load.
+
+DB overload occurs.
+
+## Solution
+
+Redis Cache
+
+## Strategy
+
+Store:
+
+student_notifications:{studentID}
+
+Cache recent notifications.
+
+## Flow
+
+1. check cache
+2. if exists → return
+3. if miss → fetch DB
+4. update cache
+
+## Tradeoffs
+
+Pros:
+
+- faster response
+- lower DB load
+
+Cons:
+
+- cache invalidation complexity
